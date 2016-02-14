@@ -1,0 +1,63 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Get Fields or Create One</h1>
+<form method="POST">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Key</label>
+    <input type="text" class="form-control" name="bkey" id="key" placeholder="Your AWhere Key">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Secret</label>
+    <input type="password" class="form-control" name="bsecret" id="secret" placeholder="Your AWhere Secret">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Lat</label>
+    <input type="lat" class="form-control" name="blat" id="latitude" placeholder="Latitude">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Long</label>
+    <input type="long" class="form-control" name="blong" id="longitude" placeholder="Longitude">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Field ID</label>
+    <input type="text" class="form-control" name="field_id" id="latitude" placeholder="Field ID">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Farm ID</label>
+    <input type="text" class="form-control" name="farm_id" id="longitude" placeholder="Farm ID">
+  </div>
+  <button type="submit" name="BFields" value="BFields" class="btn btn-default">Get Fields</button>
+  <button type="submit" name="Create_Fields" value="Create_Fields" class="btn btn-default">Create Field</button>
+</form>
+
+
+
+<h1>Give me key, secret</h1>
+<form action="/observations" method="post">
+<input type="text" name="key"></input>
+<input type="text" name="secret"></input>
+<input type="text" name="field_id"></input>
+<input type="submit" name="Fields" value="Fields"></input>
+<input type="submit" name="Observations" value="Observations"></input>
+<input type="submit" name="Download" value="Download"></input>
+</form>
+
+<h1>Fields</h1>
+<ul>
+    {% for field in fields %}
+        <li>{{field}}</li>
+        {% endfor %}
+</ul>
+
+<h1>Observations</h1>
+<h2>{{flat | safe}}</h2>
+{% endblock %}
+
