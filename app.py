@@ -11,10 +11,6 @@ def create_app():
 
 app = create_app()
 
-@app.route("/welcome")
-def welcome():
-    return render_template("welcome.html")
-
 @app.route("/upload", methods=['GET','POST'])
 def upload_file():
     template = 'upload.html'
@@ -22,29 +18,11 @@ def upload_file():
 	    return jsonify({"result": request.get_array(field_name='file')})
     return render_template(template)
 
-@app.route("/download", methods=['GET'])
-def download_file():
-    y = AWhereCall('uKrHGgL0BwfN6QZx4RKZyIIZhNq6aP3G', 'aAzNqpcFsjLWvQDf')
-    out = y.get_observations('gus_test_2')
-    flat = y.flatten_observations(out)
-    #return excel.make_response_from_array([[1,2], [3,4]], "csv")
-    return excel.make_response_from_records(flat, "csv")
-
-@app.route("/export", methods=['GET'])
-def export_records():
-    return excel.make_response_from_array([[1,2], [3,4]], "csv", filename="export_data")
-
-'''
-def get_array():
-	y = AWhereCall('uKrHGgL0BwfN6QZx4RKZyIIZhNq6aP3G', 'aAzNqpcFsjLWvQDf')
-	out = y.get_observations('gus_test_2')
-	flat = y.flatten_observations(out)
-	return flat
-'''
-
-@app.route('/observations', methods = ['GET','POST'])
+@app.route('/', methods = ['GET','POST'])
 def signup():
     observations = 'observations.html'
+    blat=18.30
+    blong=-69.59
     if request.method == 'POST':
         print request.form
         #if request.form['Fields'] == 'Fields':
@@ -71,23 +49,26 @@ def signup():
             fields = y.get_fields()
             return render_template(observations, fields=fields)
         if 'Observations' in request.form:            
-            key = request.form['key']
-            secret = request.form['secret']
+            key = request.form['bkey']
+            secret = request.form['bsecret']
             field = request.form['field_id']
             y = AWhereCall(key, secret)
             out = y.get_observations(field)
+            blat = out['observations'][0]['location']['latitude']
+            blong = out['observations'][0]['location']['longitude']
+            blong = -blong
             flat = y.flatten_observations(out)
             df = pd.DataFrame(flat)
-            return render_template(observations, flat=df.to_html())
+            return render_template(observations, flat=df.to_html(), blat=blat, blong=blong)
         if 'Download' in request.form:
-            key = request.form['key']
-            secret = request.form['secret']
+            key = request.form['bkey']
+            secret = request.form['bsecret']
             field = request.form['field_id']
             y = AWhereCall(key, secret)
             out = y.get_observations(field)
             flat = y.flatten_observations(out)
             return excel.make_response_from_records(flat, "csv")
-    return render_template(observations)
+    return render_template(observations, blat=blat, blong=blong)
 	
 @app.route('/fields', methods = ['GET', 'POST'])
 def fields():
